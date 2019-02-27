@@ -1,0 +1,7 @@
+---
+Language:        Cpp
+BasedOnStyle:  WebKit
+AlignAfterOpenBracket: Align
+BreakBeforeBraces: Attach
+...
+
