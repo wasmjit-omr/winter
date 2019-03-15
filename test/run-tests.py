@@ -35,110 +35,16 @@ from utils import Error
 IS_WINDOWS = sys.platform == 'win32'
 TEST_DIR = os.path.dirname(os.path.abspath(__file__))
 REPO_ROOT_DIR = os.path.dirname(TEST_DIR)
-OUT_DIR = os.path.join(REPO_ROOT_DIR, 'out')
+OUT_DIR = os.path.join(TEST_DIR, 'out')
 DEFAULT_TIMEOUT = 10  # seconds
 SLOW_TIMEOUT_MULTIPLIER = 2
 
 # default configurations for tests
 TOOLS = {
-    'wat2wasm': [
-        ('RUN', '%(wat2wasm)s'),
-        ('ARGS', ['%(in_file)s', '-o', '%(out_dir)s/out.wasm']),
-        ('VERBOSE-ARGS', ['-v']),
-    ],
-    'wast2json': [
-        ('RUN', '%(wast2json)s'),
-        ('ARGS', ['%(in_file)s']),
-        ('VERBOSE-ARGS', ['-v']),
-    ],
-    'wat-desugar': [
-        ('RUN', '%(wat-desugar)s'),
-        ('ARGS', ['%(in_file)s']),
-    ],
-    'run-objdump': [
+    'winter': [
         ('RUN', '%(wat2wasm)s %(in_file)s -o %(temp_file)s.wasm'),
-        ('RUN', '%(wasm-objdump)s -r -d %(temp_file)s.wasm'),
-        ('VERBOSE-ARGS', ['-v']),
+        ('RUN', '%(winter)s %(temp_file)s.wasm'),
     ],
-    'run-objdump-gen-wasm': [
-        ('RUN', '%(gen_wasm_py)s %(in_file)s -o %(temp_file)s.wasm'),
-        ('RUN', '%(wasm-objdump)s -r -d %(temp_file)s.wasm'),
-        ('VERBOSE-ARGS', ['-v']),
-    ],
-    'run-objdump-spec': [
-        ('RUN', '%(wast2json)s %(in_file)s -o %(temp_file)s.json'),
-        # NOTE: wasm files must be passed in manually via ARGS1
-        ('RUN', '%(wasm-objdump)s -r -d'),
-        ('VERBOSE-ARGS', ['-v']),
-    ],
-    'run-roundtrip': [
-        ('RUN', 'test/run-roundtrip.py'),
-        ('ARGS', [
-                '%(in_file)s',
-                '-v',
-                '--bindir=%(bindir)s',
-                '--no-error-cmdline',
-                '-o',
-                '%(out_dir)s',
-                ]),
-        ('VERBOSE-ARGS', ['--print-cmd', '-v']),
-    ],
-    'run-interp': [
-        ('RUN', '%(wat2wasm)s %(in_file)s -o %(temp_file)s.wasm'),
-        ('RUN', '%(wasm-interp)s %(temp_file)s.wasm --run-all-exports'),
-        ('VERBOSE-ARGS', ['--print-cmd', '-v']),
-    ],
-    'run-interp-spec': [
-        ('RUN', '%(wast2json)s %(in_file)s -o %(temp_file)s.json'),
-        ('RUN', '%(spectest-interp)s %(temp_file)s.json'),
-        ('VERBOSE-ARGS', ['--print-cmd', '-v']),
-    ],
-    'run-gen-wasm': [
-        ('RUN', '%(gen_wasm_py)s %(in_file)s -o %(temp_file)s.wasm'),
-        ('RUN', '%(wasm-validate)s %(temp_file)s.wasm'),
-        ('RUN', '%(wasm2wat)s %(temp_file)s.wasm'),
-        ('VERBOSE-ARGS', ['--print-cmd', '-v']),
-    ],
-    'run-gen-wasm-bad': [
-        ('RUN', '%(gen_wasm_py)s %(in_file)s -o %(temp_file)s.wasm'),
-        ('RUN', '%(wasm-validate)s %(temp_file)s.wasm'),
-        ('ERROR', '1'),
-        ('RUN', '%(wasm2wat)s %(temp_file)s.wasm'),
-        ('ERROR', '1'),
-        ('VERBOSE-ARGS', ['--print-cmd', '-v']),
-    ],
-    'run-gen-wasm-interp': [
-        ('RUN', '%(gen_wasm_py)s %(in_file)s -o %(temp_file)s.wasm'),
-        ('RUN', '%(wasm-interp)s --run-all-exports %(temp_file)s.wasm'),
-        ('VERBOSE-ARGS', ['--print-cmd', '-v']),
-    ],
-    'run-gen-wasm-strip': [
-        ('RUN', '%(gen_wasm_py)s %(in_file)s -o %(temp_file)s.wasm'),
-        ('RUN', '%(wasm-strip)s %(temp_file)s.wasm'),
-        ('RUN', '%(wasm-objdump)s -h %(temp_file)s.wasm'),
-        ('VERBOSE-ARGS', ['--print-cmd', '-v']),
-    ],
-    'run-opcodecnt': [
-        ('RUN', '%(wat2wasm)s %(in_file)s -o %(temp_file)s.wasm'),
-        ('RUN', '%(wasm-opcodecnt)s %(temp_file)s.wasm'),
-        ('VERBOSE-ARGS', ['--print-cmd', '-v']),
-    ],
-    'run-gen-spec-js': [
-        ('RUN', '%(wast2json)s %(in_file)s -o %(temp_file)s.json'),
-        ('RUN', '%(gen_spec_js_py)s %(temp_file)s.json'),
-        ('VERBOSE-ARGS', ['--print-cmd', '-v']),
-    ],
-    'run-spec-wasm2c': [
-        ('RUN', 'test/run-spec-wasm2c.py'),
-        ('ARGS', [
-                '%(in_file)s',
-                '--bindir=%(bindir)s',
-                '--no-error-cmdline',
-                '-o',
-                '%(out_dir)s',
-                ]),
-        ('VERBOSE-ARGS', ['--print-cmd', '-v']),
-    ]
 }
 
 # TODO(binji): Add Windows support for compiling using run-spec-wasm2c.py
@@ -843,7 +749,7 @@ def main(args):
   parser.add_argument('-a', '--arg',
                       help='additional args to pass to executable',
                       action='append')
-  parser.add_argument('--bindir', metavar='PATH',
+  parser.add_argument('--wabtbindir', metavar='PATH',
                       default=find_exe.GetDefaultPath(),
                       help='directory to search for all executables.')
   parser.add_argument('-v', '--verbose', help='print more diagnotic messages.',
@@ -896,12 +802,13 @@ def main(args):
     return 1
 
   variables = {}
+  variables['winter'] = os.path.abspath(os.path.join(TEST_DIR, os.pardir, "build", "winter"))
   variables['test_dir'] = os.path.abspath(TEST_DIR)
-  variables['bindir'] = options.bindir
+  variables['bindir'] = options.wabtbindir
   variables['gen_wasm_py'] = find_exe.GEN_WASM_PY
   variables['gen_spec_js_py'] = find_exe.GEN_SPEC_JS_PY
   for exe_basename in find_exe.EXECUTABLES:
-    exe_override = os.path.join(options.bindir, exe_basename)
+    exe_override = os.path.join(options.wabtbindir, exe_basename)
     variables[exe_basename] = find_exe.FindExecutable(exe_basename,
                                                       exe_override)
 

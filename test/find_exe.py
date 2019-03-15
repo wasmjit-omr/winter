@@ -22,7 +22,7 @@ from utils import Error
 
 IS_WINDOWS = sys.platform == 'win32'
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-REPO_ROOT_DIR = os.path.dirname(SCRIPT_DIR)
+WABT_ROOT_DIR = os.path.join(SCRIPT_DIR, os.pardir, "third_party", "wabt")
 EXECUTABLES = [
     'wat2wasm', 'wast2json', 'wasm2wat', 'wasm-objdump', 'wasm-interp',
     'wasm-opcodecnt', 'wat-desugar', 'spectest-interp', 'wasm-validate',
@@ -34,7 +34,7 @@ GEN_SPEC_JS_PY = os.path.join(SCRIPT_DIR, 'gen-spec-js.py')
 
 
 def GetDefaultPath():
-  return os.path.join(REPO_ROOT_DIR, 'bin')
+  return os.path.join(WABT_ROOT_DIR, 'bin')
 
 
 def GetDefaultExe(basename):
