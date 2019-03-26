@@ -16,6 +16,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+#ifndef WINTER_WASSERT_HPP
+#define WINTER_WASSERT_HPP
+
 #include <cstdio>
 #include <cstdlib>
 
@@ -25,3 +28,5 @@
             std::fprintf(stderr, (msg)); \
             std::exit(-1);               \
     } while (0)
+
+#endif
