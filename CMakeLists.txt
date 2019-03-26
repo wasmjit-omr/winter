@@ -20,6 +20,8 @@ cmake_minimum_required(VERSION 3.12)
 
 project(Winter)
 
+set(CMAKE_CXX_STANDARD 11)
+
 add_subdirectory(third_party/wabt EXCLUDE_FROM_ALL)
 target_include_directories(wabt INTERFACE
     # needed because wabt doesn't use `target_include_directories()`
