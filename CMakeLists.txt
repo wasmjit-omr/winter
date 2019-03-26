@@ -38,6 +38,7 @@ configure_file(${WINTER_SOURCE_DIR}/winter_config.h.in ${Winter_BINARY_DIR}/wint
 
 add_executable(winter
     ${WINTER_SOURCE_DIR}/main.cpp
+    ${WINTER_SOURCE_DIR}/memory.cpp
     )
 
 target_link_libraries(winter PUBLIC wabt)
