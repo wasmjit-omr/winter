@@ -17,6 +17,7 @@
  */
 
 #include <cstdio>
+#include <cstdlib>
 
 #define WASSERT(condition, msg)          \
     if (!(condition))                    \
