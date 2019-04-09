@@ -20,7 +20,11 @@ cmake_minimum_required(VERSION 3.12)
 
 project(Winter)
 
-add_subdirectory(third_party/wabt)
+include(CheckFunctionExists)
+
+set(CMAKE_CXX_STANDARD 11)
+
+add_subdirectory(third_party/wabt EXCLUDE_FROM_ALL)
 target_include_directories(wabt INTERFACE
     # needed because wabt doesn't use `target_include_directories()`
     ${WABT_SOURCE_DIR}
@@ -29,12 +33,17 @@ target_include_directories(wabt INTERFACE
 
 set(WINTER_SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/src)
 
+check_function_exists(mremap WINTER_USE_MMAP)
+configure_file(${WINTER_SOURCE_DIR}/winter_config.h.in ${Winter_BINARY_DIR}/winter_config.h)
+
 add_executable(winter
     ${WINTER_SOURCE_DIR}/main.cpp
+    ${WINTER_SOURCE_DIR}/memory.cpp
     )
 
 target_link_libraries(winter PUBLIC wabt)
 target_include_directories(winter PUBLIC
     ${WINTER_SOURCE_DIR}
+    ${Winter_BINARY_DIR}
     ${CMAKE_CURRENT_LIST_DIR}/third_party
     )

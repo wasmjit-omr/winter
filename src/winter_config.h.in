@@ -16,17 +16,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-#ifndef WINTER_WASSERT_HPP
-#define WINTER_WASSERT_HPP
+#ifndef WINTER_CONFIG_H
+#define WINTER_CONFIG_H
 
-#include <cstdio>
-#include <cstdlib>
-
-#define WASSERT(condition, msg)          \
-    if (!(condition))                    \
-        do {                             \
-            std::fprintf(stderr, (msg)); \
-            std::exit(-1);               \
-    } while (0)
+#cmakedefine WINTER_USE_MMAP
 
 #endif
