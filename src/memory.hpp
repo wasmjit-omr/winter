@@ -23,6 +23,7 @@
 #include <cstdint>
 #include <cstdlib>
 #include <cstring>
+#include <memory>
 #include <new>
 #include <type_traits>
 
@@ -50,9 +51,18 @@ constexpr NumPages WASM_ALLOCATE_FAILURE = NumPages(static_cast<size_t>(-1));
 class Memory;
 
 struct AbstractMemory {
+    bool is_import;
+
     bool is_shared;
     NumPages initial_pages = NumPages(0);
     NumPages max_pages = WASM_UNLIMITED_PAGES;
+
+    AbstractMemory(bool is_import, bool is_shared, NumPages initial_pages, NumPages max_pages)
+        : is_import(is_import), is_shared(is_shared), initial_pages(initial_pages), max_pages(max_pages) {}
+
+    static AbstractMemory for_import(bool is_shared, NumPages initial_pages, NumPages max_pages) {
+        return AbstractMemory(true, is_shared, initial_pages, max_pages);
+    }
 };
 
 struct MemoryInternal {
@@ -83,6 +93,7 @@ class Memory {
     bool alloc_at_least(NumPages num_pages);
 public:
     explicit Memory(const AbstractMemory& abstract) : _internal(this), _initial_pages(abstract.initial_pages) {
+        WASSERT(!abstract.is_import, "Memory created from unlinked AbstractMemory");
         WASSERT(!abstract.is_shared || abstract.max_pages != WASM_UNLIMITED_PAGES, "Shared memories cannot have unlimited capacity");
 
         _internal.max_capacity_pages = abstract.max_pages;
@@ -165,6 +176,14 @@ public:
     bool store(const T* buf, wptr_t addr) {
         static_assert(std::is_standard_layout<T>::value, "Only standard layout types can be in WebAssembly linear memory");
         return store(static_cast<const void*>(buf), addr, sizeof(T));
+    }
+
+    static std::shared_ptr<Memory> create_shared(NumPages min, NumPages max) {
+        return std::shared_ptr<Memory>(new Memory(AbstractMemory(false, true, min, max)));
+    }
+
+    static std::shared_ptr<Memory> create_unshared(NumPages min, NumPages max) {
+        return std::shared_ptr<Memory>(new Memory(AbstractMemory(false, false, min, max)));
     }
 };
 
