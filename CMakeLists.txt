@@ -41,7 +41,9 @@ check_function_exists(mremap WINTER_USE_MMAP)
 configure_file(${WINTER_SOURCE_DIR}/winter_config.h.in ${Winter_BINARY_DIR}/winter_config.h)
 
 add_library(winter SHARED
+    ${WINTER_SOURCE_DIR}/func.cpp
     ${WINTER_SOURCE_DIR}/memory.cpp
+    ${WINTER_SOURCE_DIR}/module.cpp
     ${WINTER_SOURCE_DIR}/type.cpp
     ${WINTER_SOURCE_DIR}/wassert.cpp
     )
