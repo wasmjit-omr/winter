@@ -38,7 +38,7 @@ static wabt::Features s_features; // static so we access at option processing ti
 static winter::Options parseOptions(int argc, char** argv) {
     winter::Options options;
 
-    wabt::OptionParser parser("winter", "   executes a WebAssembly module\n");
+    wabt::OptionParser parser("winter-interp", "   executes a WebAssembly module\n");
 
     s_features.AddOptions(&parser);
 

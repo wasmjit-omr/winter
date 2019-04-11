@@ -36,16 +36,17 @@ set(WINTER_SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/src)
 check_function_exists(mremap WINTER_USE_MMAP)
 configure_file(${WINTER_SOURCE_DIR}/winter_config.h.in ${Winter_BINARY_DIR}/winter_config.h)
 
-add_executable(winter
-    ${WINTER_SOURCE_DIR}/main.cpp
+add_library(winter SHARED
     ${WINTER_SOURCE_DIR}/memory.cpp
     ${WINTER_SOURCE_DIR}/type.cpp
     ${WINTER_SOURCE_DIR}/wassert.cpp
     )
-
 target_link_libraries(winter PUBLIC wabt)
 target_include_directories(winter PUBLIC
     ${WINTER_SOURCE_DIR}
     ${Winter_BINARY_DIR}
     ${CMAKE_CURRENT_LIST_DIR}/third_party
     )
+
+add_executable(winter-interp ${WINTER_SOURCE_DIR}/main.cpp)
+target_link_libraries(winter-interp PUBLIC winter)
