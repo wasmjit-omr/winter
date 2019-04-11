@@ -22,6 +22,8 @@ project(Winter)
 
 include(CheckFunctionExists)
 
+enable_testing()
+
 set(CMAKE_CXX_STANDARD 11)
 
 add_subdirectory(third_party/wabt EXCLUDE_FROM_ALL)
@@ -30,6 +32,8 @@ target_include_directories(wabt INTERFACE
     ${WABT_SOURCE_DIR}
     ${WABT_BINARY_DIR}
     )
+
+add_subdirectory(third_party/googletest EXCLUDE_FROM_ALL)
 
 set(WINTER_SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/src)
 
@@ -50,3 +54,5 @@ target_include_directories(winter PUBLIC
 
 add_executable(winter-interp ${WINTER_SOURCE_DIR}/main.cpp)
 target_link_libraries(winter-interp PUBLIC winter)
+
+add_subdirectory(src/test)
