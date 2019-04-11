@@ -18,6 +18,7 @@
 
 add_executable(winter-tests
     memory.cpp
+    module.cpp
     )
 target_link_libraries(winter-tests gtest_main winter)
 add_test(NAME winter-tests COMMAND winter-tests)
