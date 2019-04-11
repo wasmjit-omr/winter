@@ -39,6 +39,7 @@ configure_file(${WINTER_SOURCE_DIR}/winter_config.h.in ${Winter_BINARY_DIR}/wint
 add_executable(winter
     ${WINTER_SOURCE_DIR}/main.cpp
     ${WINTER_SOURCE_DIR}/memory.cpp
+    ${WINTER_SOURCE_DIR}/type.cpp
     ${WINTER_SOURCE_DIR}/wassert.cpp
     )
 
