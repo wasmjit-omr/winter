@@ -16,19 +16,26 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-#ifndef WINTER_WASSERT_HPP
-#define WINTER_WASSERT_HPP
+#include <cstdarg>
+#include <cstdio>
+#include <cstdlib>
 
-#define WASSERT(condition, ...)                                           \
-    if (!(condition))                                                     \
-        do {                                                              \
-            ::winter::assertion_failure(__FILE__, __LINE__, __VA_ARGS__); \
-        } while (0)
+#include "wassert.hpp"
 
 namespace winter {
 
-[[noreturn]] void assertion_failure(const char* file, int line, const char* message, ...);
+[[noreturn]] void assertion_failure(const char* file, int line, const char* message, ...) {
+    va_list args;
+
+    std::fprintf(stderr, "Assertion failed at %s:%d: ", file, line);
+
+    va_start(args, message);
+    std::vfprintf(stderr, message, args);
+    va_end(args);
+
+    std::fputc('\n', stderr);
+
+    std::abort();
+}
 
 } // namespace winter
-
-#endif
