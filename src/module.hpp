@@ -131,6 +131,8 @@ public:
 
 class ImportModule {
 public:
+    virtual ~ImportModule() {}
+
     virtual LinkedFunc* find_func(const Import& import) const = 0;
     virtual std::shared_ptr<Memory> find_memory(const Import& import) const = 0;
 };

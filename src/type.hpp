@@ -74,9 +74,7 @@ struct ValueType {
     }
 
     template <typename T>
-    static constexpr ValueType for_type() {
-        static_assert(sizeof(T) != sizeof(T), "Unsupported native type for WASM interop");
-    }
+    static constexpr ValueType for_type() = delete;
 };
 static_assert(std::is_standard_layout<ValueType>::value, "ValueType must be standard layout");
 

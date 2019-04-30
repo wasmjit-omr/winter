@@ -43,6 +43,8 @@ bool ValueType::is_assignable_to(const ValueType& dest, const ValueType& src) {
             return !dest_sig || src_sig == dest_sig;
         }
     }
+
+    WASSERT(false, "Invalid PrimitiveValueType 0x%x", static_cast<uint32_t>(dest.type));
 }
 
 const FuncSig& TypeTable::sig(std::vector<ValueType> return_types, std::vector<ValueType> param_types) {
