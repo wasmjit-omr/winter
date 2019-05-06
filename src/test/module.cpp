@@ -104,7 +104,7 @@ TEST(ModuleTest, ImportFunction) {
     ASSERT_EQ(1, mod.funcs().size());
     ASSERT_FALSE(mod.funcs()[0]);
 
-    auto mock_imod = MockImportModule::for_func("func", winter::LinkedFunc::mock(&env.types().sig(winter::FuncSig())));
+    auto mock_imod = MockImportModule::for_func("func", winter::LinkedFunc::create_mock(&env.types().sig(winter::FuncSig())));
     winter::ImportEnvironment ienv;
     ienv.add_module("mod", &mock_imod);
 
@@ -139,7 +139,7 @@ TEST(ModuleTest, ImportInvalidFunction) {
         ASSERT_EQ(0, e.import().idx);
     }
 
-    mock_imod = MockImportModule::for_func("func", winter::LinkedFunc::mock(
+    mock_imod = MockImportModule::for_func("func", winter::LinkedFunc::create_mock(
         &env.types().sig({ winter::ValueType::i32(), winter::ValueType::i32() }, { winter::ValueType::i32() })
     ));
 
@@ -153,7 +153,7 @@ TEST(ModuleTest, ImportInvalidFunction) {
         ASSERT_EQ(0, e.import().idx);
     }
 
-    mock_imod = MockImportModule::for_func("func", winter::LinkedFunc::mock(
+    mock_imod = MockImportModule::for_func("func", winter::LinkedFunc::create_mock(
         &env.types().sig({ winter::ValueType::i32() }, { winter::ValueType::i32(), winter::ValueType::i32() })
     ));
 
@@ -167,7 +167,7 @@ TEST(ModuleTest, ImportInvalidFunction) {
         ASSERT_EQ(0, e.import().idx);
     }
 
-    mock_imod = MockImportModule::for_func("func", winter::LinkedFunc::mock(
+    mock_imod = MockImportModule::for_func("func", winter::LinkedFunc::create_mock(
         &env.types().sig({ winter::ValueType::f32(), winter::ValueType::i32() }, { winter::ValueType::i32(), winter::ValueType::i32() })
     ));
 
@@ -181,7 +181,7 @@ TEST(ModuleTest, ImportInvalidFunction) {
         ASSERT_EQ(0, e.import().idx);
     }
 
-    mock_imod = MockImportModule::for_func("func", winter::LinkedFunc::mock(
+    mock_imod = MockImportModule::for_func("func", winter::LinkedFunc::create_mock(
         &env.types().sig({ winter::ValueType::i32(), winter::ValueType::i32() }, { winter::ValueType::f32(), winter::ValueType::i32() })
     ));
 

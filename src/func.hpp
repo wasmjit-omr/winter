@@ -126,7 +126,7 @@ public:
     std::shared_ptr<const InstructionStream> instrs() const { return _instrs; }
 
     static std::shared_ptr<UnlinkedFunc> instantiate(const AbstractFunc& func, Environment& env);
-    static std::shared_ptr<UnlinkedFunc> mock(const FuncSig* sig) {
+    static std::shared_ptr<UnlinkedFunc> create_mock(const FuncSig* sig) {
         auto func = std::shared_ptr<UnlinkedFunc>(new UnlinkedFunc());
 
         func->_internal.sig = sig;
@@ -163,9 +163,9 @@ public:
     ModuleInstance& module() const { return *_module; }
 
     static std::unique_ptr<LinkedFunc> instantiate(std::shared_ptr<UnlinkedFunc> unlinked, ModuleInstance* module);
-    static std::unique_ptr<LinkedFunc> mock(const FuncSig* sig) {
+    static std::unique_ptr<LinkedFunc> create_mock(const FuncSig* sig) {
         auto func = std::unique_ptr<LinkedFunc>(new LinkedFunc());
-        auto unlinked = UnlinkedFunc::mock(sig);
+        auto unlinked = UnlinkedFunc::create_mock(sig);
 
         func->_internal.unlinked = unlinked->internal();
         func->_internal.module = nullptr;
