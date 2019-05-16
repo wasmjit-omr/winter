@@ -41,9 +41,9 @@ SLOW_TIMEOUT_MULTIPLIER = 2
 
 # default configurations for tests
 TOOLS = {
-    'winter': [
+    'winter-interp': [
         ('RUN', '%(wat2wasm)s %(in_file)s -o %(temp_file)s.wasm'),
-        ('RUN', '%(winter)s %(temp_file)s.wasm'),
+        ('RUN', '%(winter-interp)s %(temp_file)s.wasm'),
     ],
 }
 
@@ -802,7 +802,7 @@ def main(args):
     return 1
 
   variables = {}
-  variables['winter'] = os.path.abspath(os.path.join(TEST_DIR, os.pardir, "build", "winter"))
+  variables['winter-interp'] = os.path.abspath(os.path.join(TEST_DIR, os.pardir, "build", "winter-interp"))
   variables['test_dir'] = os.path.abspath(TEST_DIR)
   variables['bindir'] = options.wabtbindir
   variables['gen_wasm_py'] = find_exe.GEN_WASM_PY

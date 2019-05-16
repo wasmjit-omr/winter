@@ -16,18 +16,19 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-#ifndef WINTER_WASSERT_HPP
-#define WINTER_WASSERT_HPP
+#ifndef WINTER_ENVIRONMENT_HPP
+#define WINTER_ENVIRONMENT_HPP
 
-#define WASSERT(condition, ...)                                           \
-    if (!(condition))                                                     \
-        do {                                                              \
-            ::winter::assertion_failure(__FILE__, __LINE__, __VA_ARGS__); \
-        } while (0)
+#include "type.hpp"
 
 namespace winter {
 
-[[noreturn]] void assertion_failure(const char* file, int line, const char* message, ...);
+class Environment {
+    TypeTable _types;
+public:
+    const TypeTable& types() const { return _types; }
+    TypeTable& types() { return _types; }
+};
 
 } // namespace winter
 
