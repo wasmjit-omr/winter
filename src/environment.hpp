@@ -23,10 +23,29 @@
 
 namespace winter {
 
+/**
+ * \brief Represents a single WebAssembly sandboxed environment.
+ *
+ * Each Environment represents a completely isolated WebAssembly sandbox. Each sandbox operates
+ * entirely independently from all others. Because of this, there are several restrictions on
+ * sharing between WebAssembly code instantiated in different sandboxes:
+ *
+ * - WebAssembly code from one sandbox cannot directly call WebAssembly code in a different sandbox
+ * - References can only be used in the WebAssembly sandbox in which they were created
+ * - Linear memory cannot be shared between WebAssembly code in different sandboxes, even if it is
+ *   marked as shared
+ */
 class Environment {
     TypeTable _types;
 public:
+    /**
+     * \brief Gets the TypeTable used by WebAssembly code in this sandbox.
+     */
     const TypeTable& types() const { return _types; }
+
+    /**
+     * \brief Gets the TypeTable used by WebAssembly code in this sandbox.
+     */
     TypeTable& types() { return _types; }
 };
 
